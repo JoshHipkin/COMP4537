@@ -1,6 +1,18 @@
+import {
+  INPUT_MESSAGE,
+  WIN_MESSAGE,
+  LOSE_MESSAGE,
+} from "../lang/messages/en/user.js";
+
+/**
+ * ChatGPT was used for assist with bug fixing and code generation for keeping the buttons/
+ * boxes within the browser window during shuffling.
+ */
+
 /**
  * Represents an instance of the memory game
  */
+
 class Game {
   constructor(numButtons) {
     this.numButtons = numButtons;
@@ -14,9 +26,9 @@ class Game {
       "purple",
       "cyan",
     ];
+    this.currentValue = 1;
     this.buttons = [];
     this.container = document.getElementById("gameContainer");
-
     this.container.innerHTML = "";
 
     const windowWidth = window.innerWidth - 50;
@@ -54,6 +66,7 @@ class Game {
 
         if (shuffleCount == this.numButtons) {
           clearInterval(shuffleInterval);
+          this.activateButtons();
         }
       }, 2000);
     }, this.numButtons * 1000);
@@ -77,6 +90,32 @@ class Game {
 
       button.setLocation(rndX, rndY);
     });
+  }
+
+  activateButtons() {
+    this.buttons.forEach((button) => {
+      button.element.addEventListener("click", () => this.handleClick(button));
+    });
+  }
+
+  handleClick(button) {
+    if (this.currentValue === button.value) {
+      button.toggleValue();
+
+      if (this.currentValue == this.numButtons) {
+        alert(WIN_MESSAGE);
+        this.container.innerHTML = "";
+      }
+      this.currentValue++;
+    } else {
+      alert(LOSE_MESSAGE);
+      this.container.innerHTML = "";
+    }
+  }
+
+  resetGame() {
+    this.container.innerHTML = "";
+    this.currentValue = 1;
   }
 }
 
@@ -107,6 +146,7 @@ class Button {
     button.style.alignItems = "center";
     button.style.justifyContent = "center";
     button.style.fontSize = "1.5em";
+    button.style.border = "solid #000000 1px";
     button.style.cursor = "pointer";
     button.innerText = this.hidden ? "" : this.value;
 
@@ -140,7 +180,9 @@ class Input {
   }
 
   validateEntry() {
-    if (this.numButtons > 7 || this.numButtons < 3) {
+    const num = Number(this.numButtons);
+    if (isNaN(num) || this.numButtons > 7 || this.numButtons < 3) {
+      alert(INPUT_MESSAGE);
       return false;
     }
     return true;
