@@ -5,7 +5,7 @@ import {
 } from "../lang/messages/en/user.js";
 
 /**
- * ChatGPT was used for assist with bug fixing and code generation for keeping the buttons/
+ * ChatGPT was used for assisting with bug fixing and code generation for keeping the buttons/
  * boxes within the browser window during shuffling.
  */
 
@@ -156,17 +156,13 @@ class Button {
   setLocation(x, y) {
     this.x = x;
     this.y = y;
-    if (this.element) {
-      this.element.style.left = `${this.x}px`;
-      this.element.style.top = `${this.y}px`;
-    }
+    this.element.style.left = `${this.x}px`;
+    this.element.style.top = `${this.y}px`;
   }
 
   toggleValue() {
     this.hidden = !this.hidden;
-    if (this.element) {
-      this.element.innerText = this.hidden ? "" : this.value;
-    }
+    this.element.innerText = this.hidden ? "" : this.value;
   }
 }
 
