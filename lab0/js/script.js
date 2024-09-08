@@ -56,8 +56,6 @@ class Game {
 
   run() {
     setTimeout(() => {
-      this.hideNumbers();
-
       let shuffleCount = 0;
       const shuffleInterval = setInterval(() => {
         this.shuffleButtons();
@@ -65,6 +63,10 @@ class Game {
 
         if (shuffleCount == this.numButtons) {
           clearInterval(shuffleInterval);
+
+          setTimeout(() => {
+            this.hideNumbers();
+          }, 1000);
           this.activateButtons();
         }
       }, 2000);
