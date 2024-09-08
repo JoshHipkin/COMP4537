@@ -16,7 +16,6 @@ import {
 class Game {
   constructor(numButtons) {
     this.numButtons = numButtons;
-    this.jumps = numButtons;
     this.colors = [
       "red",
       "green",
@@ -78,8 +77,8 @@ class Game {
 
   shuffleButtons() {
     //width of buttons in pixels, approximated from actual em sizes.
-    const buttonWidth = 160;
-    const buttonHeight = 80;
+    const buttonWidth = 190;
+    const buttonHeight = 100;
 
     const maxX = this.container.offsetWidth - buttonWidth;
     const maxY = this.container.offsetHeight - buttonHeight;
@@ -104,12 +103,12 @@ class Game {
 
       if (this.currentValue == this.numButtons) {
         alert(WIN_MESSAGE);
-        this.container.innerHTML = "";
+        this.resetGame();
       }
       this.currentValue++;
     } else {
       alert(LOSE_MESSAGE);
-      this.container.innerHTML = "";
+      this.resetGame();
     }
   }
 
