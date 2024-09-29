@@ -79,8 +79,8 @@ class Game {
 
   shuffleButtons() {
     //width of buttons in pixels, approximated from actual em sizes.
-    const buttonWidth = 190;
-    const buttonHeight = 100;
+    const buttonWidth = 195;
+    const buttonHeight = 105;
 
     const maxX = this.container.offsetWidth - buttonWidth;
     const maxY = this.container.offsetHeight - buttonHeight;
@@ -132,7 +132,7 @@ class Button {
     this.x = x;
     this.y = y;
     this.hidden = false;
-    this.element = null;
+    this.element = null; // this will be a reference to the dom object when it is created later
   }
 
   draw(container) {
