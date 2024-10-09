@@ -58,14 +58,20 @@ const router = new Router();
 //Add route for get ie. Select
 router.addRoute("/query", "GET", async (req, res) => {
   const query = req.body.query;
-
-  try {
-    const results = await database.runQuery(query);
-    res.writeHead(200, { "content-type": "application/json" });
-    res.end(JSON.stringify({ success: true, data: results }));
-  } catch (e) {
+  if (query) {
+    try {
+      const results = await database.runQuery(query);
+      res.writeHead(200, { "content-type": "application/json" });
+      res.end(JSON.stringify({ success: true, data: results }));
+    } catch (e) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: false, error: e.message }));
+    }
+  } else {
     res.writeHead(400, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ success: false, error: e.message }));
+    res.end(
+      JSON.stringify({ success: false, error: "Query parameter is required" })
+    );
   }
 });
 
