@@ -1,5 +1,7 @@
+require("dotenv").config();
 const http = require("http");
 const url = require("url");
+const database = require("./database/queries");
 
 class Router {
   constructor() {
@@ -14,7 +16,7 @@ class Router {
   }
 
   getHandler(path, method) {
-    if (this.routes[path] && this.routes[path][nethod]) {
+    if (this.routes[path] && this.routes[path][method]) {
       return this.routes[path][method];
     } else {
       return null;
@@ -54,3 +56,30 @@ const router = new Router();
 //Add route for post ie. insert/update/delete
 
 //Add route for get ie. Select
+router.addRoute("/query", "GET", async (req, res) => {
+  const query = req.body.query;
+
+  try {
+    const results = await database.runQuery(query);
+    res.writeHead(200, { "content-type": "application/json" });
+    res.end(JSON.stringify({ success: true, data: results }));
+  } catch (e) {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ success: false, error: e.message }));
+  }
+});
+
+router.addRoute("/select*frompatient", "GET", async (req, res) => {
+  try {
+    const results = await database.getPatients();
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ success: true, data: results }));
+  } catch (e) {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ success: false, error: e.message }));
+  }
+});
+
+const port = 3000;
+const server = new Server(port, router);
+server.start();
