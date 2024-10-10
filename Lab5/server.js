@@ -97,44 +97,24 @@ router.addRoute("/query", "POST", async (req, res) => {
 
 //Add route for get ie. Select
 router.addRoute("/query", "GET", async (req, res) => {
-  let body = "";
+  const parsedUrl = url.parse(req.url, true);
+  const query = parsedUrl.query.query;
 
-  req.on("data", (chunk) => {
-    body += chunk.toString();
-  });
-
-  req.on("end", async () => {
+  if (query) {
     try {
-      const { query } = JSON.parse(body);
-
-      if (query) {
-        try {
-          const results = await database.runQuery(query);
-          res.writeHead(200, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ success: true, data: results }));
-        } catch (e) {
-          res.writeHead(400, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ success: false, error: e.message }));
-        }
-      } else {
-        res.writeHead(400, { "Content-Type": "application/json" });
-        res.end(
-          JSON.stringify({
-            success: false,
-            error: "Query parameter is required",
-          })
-        );
-      }
+      const results = await database.runQuery(query); // Run query against the database
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true, data: results }));
     } catch (e) {
       res.writeHead(400, { "Content-Type": "application/json" });
-      res.end(
-        JSON.stringify({
-          success: false,
-          error: "Invalid JSON in request body",
-        })
-      );
+      res.end(JSON.stringify({ success: false, error: e.message }));
     }
-  });
+  } else {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({ success: false, error: "Query parameter is required" })
+    );
+  }
 });
 
 router.addRoute("/select*frompatient", "GET", async (req, res) => {
