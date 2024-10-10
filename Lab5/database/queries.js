@@ -33,7 +33,7 @@ async function getPatients() {
 
 async function insert(query) {
   const createTable = `
-  CREATE TABLE IF NOT EXISTS Patient ()
+  CREATE TABLE IF NOT EXISTS Patient (
   patient_id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   date_of_birth DATETIME NOT NULL);
