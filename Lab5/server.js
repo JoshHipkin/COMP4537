@@ -65,32 +65,42 @@ class Server {
 const router = new Router();
 //Add route for post ie. insert/update/delete
 router.addRoute("/query", "POST", async (req, res) => {
-  let body = '';
+  let body = "";
 
-  req.on('data', chunk => {
+  req.on("data", (chunk) => {
     body += chunk.toString();
   });
 
-  req.on('end', async () => {
+  req.on("end", async () => {
     try {
-      const { query } =   JSON.parse(body);
+      const { query } = JSON.parse(body);
 
-      if (query) {
+      if (query && (query.toUpperCase().startsWith("SELECT") || query.toUpperCase().startsWith("INSERT"))) {
         try {
-          const results = await database.insert(query);
-          res.writeHead(200, {"Content-Type": "application/json"});
-          res.end(JSON.stringify({success: true, data: results}));
+          const results = await database.safeRunQuery(query);
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ success: true, data: results }));
         } catch (e) {
-          res.writeHead(400, {"Content-Type": "application/json"});
-          res.end(JSON.stringify({success: false, error: e.message}));
+          res.writeHead(400, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ success: false, error: e.message }));
         }
       } else {
-        res.writeHead(400, {"Content-Type": "application/json"});
-        res.end(JSON.stringify({success: false, error: "Query parameter is required"}));
+        res.writeHead(400, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({
+            success: false,
+            error: "Only SELECT and INSERT queries are allowed",
+          })
+        );
       }
     } catch (e) {
-      res.writeHead(400, {"Content-Type": "application/json"});
-      res.end(JSON.stringify({success: false, error: "Invalid JSON in request body"}));
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(
+        JSON.stringify({
+          success: false,
+          error: "Invalid JSON in request body",
+        })
+      );
     }
   });
 });

@@ -1,11 +1,10 @@
 const database = require("../utils/dbConnection");
 
 async function runQuery(query) {
-  const forbiddenKeywords = ["DELETE", "UPDATE", "DROP", "ALTER", "TRUNCATE"];
-  if (
-    forbiddenKeywords.some((keyword) => query.toUpperCase().includes(keyword))
-  ) {
-    throw new Error("403");
+  const forbiddenKeywords = /^(DELETE|UPDATE|DROP|ALTER|TRUNCATE)/i;
+
+  if (forbiddenKeywords.test(query.trim())) {
+    throw new Error("400 - Dangerous SQL query detected");
   }
   try {
     const results = await database.query(query);
