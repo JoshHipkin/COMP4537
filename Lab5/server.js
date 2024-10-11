@@ -102,7 +102,7 @@ router.addRoute("/query", "GET", async (req, res) => {
 
   if (query) {
     try {
-      const results = await database.runQuery(query); // Run query against the database
+      const results = await database.runQuery(query);
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: true, data: results }));
     } catch (e) {

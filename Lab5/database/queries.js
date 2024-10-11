@@ -7,10 +7,6 @@ async function runQuery(query) {
   ) {
     throw new Error("403");
   }
-
-  if (!query.toUpperCase().includes("LIMIT")) {
-    query += " LIMIT 100";
-  }
   try {
     const results = await database.query(query);
     return results[0];
