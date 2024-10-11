@@ -77,7 +77,7 @@ router.addRoute("/query", "POST", async (req, res) => {
 
       if (query && (query.toUpperCase().startsWith("SELECT") || query.toUpperCase().startsWith("INSERT"))) {
         try {
-          const results = await database.RunQuery(query);
+          const results = await database.runQuery(query);
           res.writeHead(200, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ success: true, data: results }));
         } catch (e) {
